@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <h1 class="text-ceneter">Gestión de Tareas</h1>
+    <h1 class="text-center">Gestión de Tareas</h1>
 
   </div>
 </template>
