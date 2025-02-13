@@ -12,7 +12,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { db } from '@/firebase/firebase';
+import { db } from '@/firebase';
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 const tasks = ref([]);
