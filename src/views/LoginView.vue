@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid vh-100 d-flex align-items-center">
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
         <div class="row w-100 ">
             <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-gray-100">
                 <img src="../../public/undraw_software-engineer_xv60.svg" alt="Ilustración de inicio de sesión"
@@ -12,10 +12,10 @@
 
                     <input type="email" v-model="email" class="form-control mb-3" placeholder="Correo electrónico" />
                     <input type="password" v-model="password" class="form-control mb-3" placeholder="Contraseña" />
-                    <button @click="loginWithEmail" class="btn btn-primary w-100 mb-2">Iniciar sesión</button>
+                    <button @click="loginWithEmail" class="btn btn-primary w-100 mb-3">Iniciar sesión</button>
 
                     <button @click="loginWithGoogle" class="btn btn-outline-primary w-100 mb-3">
-                        <i class="fab fa-google me-2"></i> Iniciar con Google
+                        <i class="bi bi-google me-2"></i> Iniciar con Google
                     </button>
 
                     <p v-if="errorMsg" class="text-danger text-center">{{ errorMsg }}</p>
