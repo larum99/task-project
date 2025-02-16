@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { db } from '@/firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';

@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted } from 'vue';
 import { db } from '@/firebase';
 import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
