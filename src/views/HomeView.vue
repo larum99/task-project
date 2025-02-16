@@ -1,12 +1,15 @@
 <template>
-    <div class="container">
-        <h2 class="text-center mb-4">Tareas</h2>
-        <TaskForm />
-        <TaskList />
+    <div class="text-center mt-5">
+        <h1>Bienvenido a la Gestión de Tareas</h1>
+        <router-link to="/login" class="btn btn-primary m-2">Iniciar Sesión</router-link>
+        <router-link to="/register" class="btn btn-secondary m-2">Registrarse</router-link>
     </div>
 </template>
 
-<script setup>
-import TaskForm from '@/components/TaskForm.vue';
-import TaskList from '@/components/TaskList.vue';
-</script>
+<script setup></script>
+
+<style scoped>
+h1 {
+    color: #333;
+}
+</style>

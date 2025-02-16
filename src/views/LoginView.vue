@@ -1,15 +1,16 @@
 <template>
-    <div class="container mt-5">
+    <div class="login-container">
         <h2>Iniciar Sesión</h2>
-        <input v-model="email" type="email" class="form-control mb-2" placeholder="Correo electrónico" />
-        <input v-model="password" type="password" class="form-control mb-3" placeholder="Contraseña" />
-        <button class="btn btn-success w-100 mb-3" @click="login">Iniciar sesión</button>
+        <!-- Login con correo y contraseña -->
+        <input type="email" v-model="email" placeholder="Correo electrónico" />
+        <input type="password" v-model="password" placeholder="Contraseña" />
+        <button @click="loginWithEmail">Iniciar Sesión</button>
 
-        <button class="btn btn-outline-primary w-100 mb-3" @click="loginWithGoogle">
-            Iniciar sesión con Google
-        </button>
+        <!-- Login con Google -->
+        <button @click="loginWithGoogle" class="google-btn">Iniciar con Google</button>
 
-        <p class="mt-2">¿No tienes cuenta? <router-link to="/register">Regístrate</router-link></p>
+        <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+        <router-link to="/register">¿No tienes cuenta? Regístrate</router-link>
     </div>
 </template>
 
@@ -21,23 +22,53 @@ import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
+const errorMsg = ref('');
 const router = useRouter();
 
-const login = async () => {
+// Iniciar sesión con correo y contraseña
+const loginWithEmail = async () => {
     try {
         await signInWithEmailAndPassword(auth, email.value, password.value);
-        router.push('/');
+        router.push('/tasks');
     } catch (error) {
-        alert('Error al iniciar sesión: ' + error.message);
+        errorMsg.value = 'Error al iniciar sesión.';
+        console.error(error);
     }
 };
 
+// Iniciar sesión con Google
 const loginWithGoogle = async () => {
     try {
-        await signInWithPopup(auth, googleProvider);
-        router.push('/');
+        const result = await signInWithPopup(auth, googleProvider);
+        console.log('Google login success:', result.user);
+        router.push('/tasks');
     } catch (error) {
-        alert('Error al iniciar sesión con Google: ' + error.message);
+        errorMsg.value = 'Error al iniciar con Google.';
+        console.error(error);
     }
 };
+
 </script>
+
+<style scoped>
+.login-container {
+    max-width: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.google-btn {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+}
+</style>

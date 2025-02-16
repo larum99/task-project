@@ -1,41 +1,80 @@
 <template>
     <div class="mb-3">
-        <input type="text" v-model="task" class="form-control" placeholder="Nueva tarea">
-        <button class="btn btn-primary mt-2" @click="addTask">Agregar</button>
+        <input
+            type="text"
+            v-model="taskText"
+            class="form-control"
+            placeholder="Nueva tarea o editar tarea"
+        />
+        <button class="btn btn-primary mt-2" @click="handleTask">
+            {{ isEditing ? 'Guardar Cambios' : 'Agregar Tarea' }}
+        </button>
+        <button v-if="isEditing" class="btn btn-secondary mt-2 ms-2" @click="cancelEdit">Cancelar</button>
+        <p v-if="errorMsg" class="text-danger">{{ errorMsg }}</p>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps, defineEmits, watch } from 'vue';
 import { db } from '@/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
-const task = ref('');
+const props = defineProps({
+    taskToEdit: Object,
+});
+const emit = defineEmits(['task-edited']);
 
-const addTask = async () => {
+const taskText = ref('');
+const taskId = ref(null);
+const isEditing = ref(false);
+const errorMsg = ref('');
+
+watch(() => props.taskToEdit, (newTask) => {
+    if (newTask && newTask.id) {
+        taskText.value = newTask.text;
+        taskId.value = newTask.id;
+        isEditing.value = true;
+    } else {
+        resetForm();
+    }
+});
+
+const handleTask = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (!user) {
-        console.error('Usuario no autenticado');
-        alert('Debes iniciar sesión para agregar tareas.');
+        errorMsg.value = 'Debes estar autenticado para agregar tareas.';
+        return;
+    }
+    if (taskText.value.trim() === '') {
+        errorMsg.value = 'La tarea no puede estar vacía.';
         return;
     }
 
-    if (task.value.trim() === '') return;
-
-    try {
+    if (isEditing.value && taskId.value) {
+        const taskRef = doc(db, 'tasks', taskId.value);
+        await updateDoc(taskRef, { text: taskText.value });
+    } else {
         await addDoc(collection(db, 'tasks'), {
-            text: task.value,
+            text: taskText.value,
             completed: false,
-            userId: user.uid
+            userId: user.uid,
+            createdAt: new Date(),
         });
-        console.log('Tarea añadida con éxito');
-        task.value = '';
-    } catch (error) {
-        console.error('Error al agregar tarea:', error);
     }
+
+    emit('task-edited');
+    resetForm();
 };
 
+const cancelEdit = () => resetForm();
+
+const resetForm = () => {
+    taskText.value = '';
+    taskId.value = null;
+    isEditing.value = false;
+    errorMsg.value = '';
+};
 </script>
