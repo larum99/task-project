@@ -15,3 +15,8 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
+
